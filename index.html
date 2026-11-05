@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Birthday Surprise ❤️</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+ background:#090909;
+ color:#fff;
+ font-family:Georgia,serif;
+ text-align:center;
+}
+.gold{color:#d5b16b}
+.hero{
+ min-height:100vh;
+ padding:45px 20px;
+ display:flex;
+ flex-direction:column;
+ justify-content:center;
+ align-items:center;
+ background:radial-gradient(circle,#382b1a,#090909 70%);
+}
+.small{
+ color:#d5b16b;
+ letter-spacing:4px;
+ font:11px Arial,sans-serif;
+}
+h1{
+ font-size:clamp(48px,10vw,80px);
+ margin:25px 0;
+ font-weight:normal;
+}
+h1 span{color:#d5b16b;font-style:italic}
+button{
+ background:transparent;
+ border:1px solid #d5b16b;
+ color:#d5b16b;
+ padding:13px 25px;
+ margin:15px;
+ cursor:pointer;
+ letter-spacing:2px;
+}
+button:hover{background:#d5b16b;color:#090909}
+section{padding:70px 20px;max-width:850px;margin:auto}
+h2{font-size:35px;font-weight:normal;color:#d5b16b;margin:20px}
+p{line-height:1.9;color:#d0c8bc}
+.portrait{
+ width:230px;
+ height:280px;
+ border:2px solid #d5b16b;
+ padding:6px;
+ margin:25px auto;
+}
+.portrait img{width:100%;height:100%;object-fit:cover}
+.letter{
+ display:none;
+ background:#171717;
+ border:1px solid #806438;
+ padding:30px;
+ line-height:2;
+ animation:appear 1s;
+}
+@keyframes appear{
+ from{opacity:0;transform:translateY(20px)}
+ to{opacity:1;transform:translateY(0)}
+}
+.gallery{
+ display:grid;
+ grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+ gap:12px;
+ margin-top:25px;
+}
+.gallery img{
+ width:100%;
+ height:200px;
+ object-fit:cover;
+ border:1px solid #d5b16b;
+}
+.cake{font-size:100px;animation:bounce 2s infinite}
+@keyframes bounce{50%{transform:translateY(-15px)}}
+#surprise{display:none;padding:25px;font-size:20px}
+footer{padding:35px;color:#d5b16b}
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+ <div class="small">A LITTLE SURPRISE FOR YOU</div>
+ <h1>Happy<br><span>Birthday ❤️</span></h1>
+ <p>Someone special deserves something special.</p>
+ <button onclick="document.getElementById('opening').scrollIntoView({behavior:'smooth'})">
+ OPEN YOUR SURPRISE ↓
+ </button>
+</div>
+
+<section id="opening">
+ <div class="small">MADE JUST FOR YOU</div>
+ <h2>A Letter From The Heart 💌</h2>
+
+ <div class="portrait">
+  <img src="birthday-photo.jpg" alt="Birthday portrait">
+ </div>
+
+ <p>There are a few words I want you to read...</p>
+
+ <button onclick="openLetter()">OPEN MY LETTER 💌</button>
+
+ <div class="letter" id="letter">
+  <h2>To Someone Special ❤️</h2>
+  <p>
+   Today is a beautiful reminder that someone
+   wonderful came into this world.
+
+   I hope your life is always filled with
+   happiness, laughter and beautiful memories.
+
+   May every dream you have find its way
+   towards reality.
+
+   Never forget how special and valuable
+   you are.
+
+   May this birthday bring you endless
+   reasons to smile and a year full of
+   wonderful surprises.
+
+   Happy Birthday! ❤️
+  </p>
+  <p class="gold">With lots of love and warm wishes ✨</p>
+ </div>
+</section>
+
+<section>
+ <div class="small">YOUR BEAUTIFUL MOMENTS</div>
+ <h2>Photo Gallery 📸</h2>
+ <p>Choose your favourite photographs.</p>
+
+ <input type="file" id="photos" accept="image/*" multiple>
+
+ <div class="gallery" id="gallery"></div>
+</section>
+
+<section>
+ <div class="small">A LITTLE BIRTHDAY MAGIC</div>
+ <h2>Make A Wish 🎂</h2>
+
+ <div class="cake">🎂</div>
+
+ <button onclick="showSurprise()">REVEAL YOUR SURPRISE ✨</button>
+
+ <div id="surprise">
+  <h2>You Are Truly Special ❤️</h2>
+  <p>
+   May your smile never fade,
+   your dreams keep growing,
+   and happiness always find you.
+   Have the most beautiful birthday!
+  </p>
+ </div>
+</section>
+
+<section>
+ <h2>Birthday Music 🎵</h2>
+ <button onclick="toggleMusic()" id="musicBtn">▶ PLAY MUSIC</button>
+</section>
+
+<footer>
+ MADE WITH LOVE ❤️
+ <br><br>
+ A LITTLE SURPRISE JUST FOR YOU
+</footer>
+
+<script>
+function openLetter(){
+ document.getElementById("letter").style.display="block";
+}
+
+function showSurprise(){
+ document.getElementById("surprise").style.display="block";
+}
+
+document.getElementById("photos").addEventListener("change",function(){
+ const gallery=document.getElementById("gallery");
+ gallery.innerHTML="";
+
+ Array.from(this.files).forEach(file=>{
+  if(!file.type.startsWith("image/"))return;
+  const img=document.createElement("img");
+  img.src=URL.createObjectURL(file);
+  img.alt="Birthday memory";
+  gallery.appendChild(img);
+ });
+});
+
+// Original soft background melody
+let audio=null,playing=false,timer=null;
+let notes=[392,440,523,440,349,392,440,523],i=0;
+
+function toggleMusic(){
+ const btn=document.getElementById("musicBtn");
+
+ if(!playing){
+  audio=audio||new(window.AudioContext||window.webkitAudioContext)();
+  audio.resume();
+  playing=true;
+
+  function playNote(){
+   if(!playing)return;
+   const osc=audio.createOscillator();
+   const gain=audio.createGain();
+   osc.frequency.value=notes[i++%notes.length];
+   osc.connect(gain);
+   gain.connect(audio.destination);
+   gain.gain.setValueAtTime(.035,audio.currentTime);
+   gain.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.4);
+   osc.start();
+   osc.stop(audio.currentTime+.4);
+  }
+
+  playNote();
+  timer=setInterval(playNote,550);
+  btn.innerText="Ⅱ PAUSE MUSIC";
+ }else{
+  playing=false;
+  clearInterval(timer);
+  btn.innerText="▶ PLAY MUSIC";
+ }
+}
+</script>
+
+</body>
+</html>
